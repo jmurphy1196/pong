@@ -1,4 +1,6 @@
-import { useEffect, useState, useRef, act } from "react";
+import { useEffect, useState, useRef  } from "react";
+import Player from "../../models/Player";
+import Ball from "../../models/Ball";
 
 export default function Game() {
   const canvasRef = useRef(null);
@@ -10,32 +12,19 @@ export default function Game() {
   });
   const [gameLoop, setGameLoop] = useState(null);
   const [eventListeners, setEventListeners] = useState([]);
-  const player1 = {
-    x: 10,
-    y: gameSettings.canvasHeight / 2 - 40,
-    width: 10,
-    height: 80,
-    color: "white",
-  };
-  const player2 = {
-    x: gameSettings.canvasWidth - 20,
-    y: gameSettings.canvasHeight / 2 - 40,
-    width: 10,
-    height: 80,
-    color: "white",
-  };
+  const {width: playerWidth, height: playerHeight} = Player.getPaddleDimmensions(gameSettings);
+  console.log("Player dimensions", playerWidth, playerHeight);
+
+  const player1 = new Player("Player 1", "white", playerWidth, playerHeight, 1);
+  const player2 = new Player("Player 2", "white", playerWidth, playerHeight, 2);
+  Player.setPlayerPositions([player1, player2], gameSettings);
+
+  const ball = new Ball(gameSettings.canvasWidth, gameSettings.canvasHeight);
+
+
 
   const activePlayer = player1;
 
-  const ball = {
-    x: gameSettings.canvasWidth / 2,
-    y: gameSettings.canvasHeight / 2,
-    radius: 10,
-    speed: 5,
-    velocityX: 3.5,
-    velocityY: 3.5,
-    color: "white",
-  };
   const drawPlayers = () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
